@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora VICMAN</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; max-width: 600px; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        input[type="number"] { width: 100px; }
+        .total { font-weight: bold; color: green; }
+    </style>
+</head>
+<body>
+    <h2>Calculadora VICMAN</h2>
+    <table>
+        <tr><td>Hora de Proyecto ($):</td><td><input type="number" id="horaProyecto" value="150000"></td></tr>
+        <tr><td>Cantidad de Fotos:</td><td><input type="number" id="cantidadFotos" value="0"></td></tr>
+        <tr><td>Valor Uber ($):</td><td><input type="number" id="valorUber" value="0"></td></tr>
+        <tr><td>Impresiones ($):</td><td><input type="number" id="impresiones" value="0"></td></tr>
+        <tr><td>Costos variables ($):</td><td><input type="number" id="costosVariables" value="7000"></td></tr>
+        <tr><td>Descuento (%):</td><td><input type="number" id="descuento" step="0.01" value="0.22"></td></tr>
+    </table>
+
+    <br>
+    <button onclick="calcular()">Calcular Totales</button>
+
+    <h3>Resultados:</h3>
+    <p>Total sin impuestos: <span class="total" id="totalSinImpuestos">$0</span></p>
+    <p>Impuestos (19%): <span class="total" id="impuestos">$0</span></p>
+    <p>Total boleta: <span class="total" id="totalBoleta">$0</span></p>
+    <p>Total con descuento: <span class="total" id="totalDescuento">$0</span></p>
+
+    <script>
+        function calcular() {
+            const hora = parseFloat(document.getElementById("horaProyecto").value) || 0;
+            const fotos = parseFloat(document.getElementById("cantidadFotos").value) || 0;
+            const uber = parseFloat(document.getElementById("valorUber").value) || 0;
+            const impresiones = parseFloat(document.getElementById("impresiones").value) || 0;
+            const costos = parseFloat(document.getElementById("costosVariables").value) || 0;
+            const descuento = parseFloat(document.getElementById("descuento").value) || 0;
+
+            const subtotal = hora + uber + impresiones + costos;
+            const impuesto = subtotal * 0.19;
+            const total = subtotal + impuesto;
+            const totalDesc = total - (total * descuento);
+
+            document.getElementById("totalSinImpuestos").innerText = "$" + subtotal.toLocaleString();
+            document.getElementById("impuestos").innerText = "$" + impuesto.toLocaleString();
+            document.getElementById("totalBoleta").innerText = "$" + total.toLocaleString();
+            document.getElementById("totalDescuento").innerText = "$" + totalDesc.toLocaleString();
+        }
+    </script>
+</body>
+</html>
