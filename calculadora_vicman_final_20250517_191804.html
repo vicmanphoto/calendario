@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Presupuesto VICMAN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input, select {
+            width: 200px;
+            padding: 6px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .resultado {
+            margin-top: 30px;
+        }
+        .resultado span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Calculadora Presupuesto VICMAN</h2>
+    <label>Horas Servicio:
+        <select id="horasServicio" onchange="actualizarHorasEdicion()">
+            <option value="0">0</option>
+            <option value="0.5">0.5</option>
+            <option value="0.75">0.75</option>
+            <option value="1">1</option>
+            <option value="1.25">1.25</option>
+            <option value="1.5">1.5</option>
+            <option value="1.75">1.75</option>
+            <option value="2">2</option>
+            <option value="2.25">2.25</option>
+            <option value="2.5">2.5</option>
+            <option value="3">3</option>
+            <option value="3.5">3.5</option>
+            <option value="4">4</option>
+            <option value="4.5">4.5</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+    </label>
+    <label>Horas Edición:
+        <input type="number" id="horasEdicion" step="0.25" readonly>
+    </label>
+    <label>Cantidad de Fotos:
+        <input type="number" id="cantidadFotos" value="0">
+    </label>
+    <label>Valor Uber ($):
+        <input type="number" id="valorUber" value="0">
+    </label>
+    <label>Impresiones:
+        <select id="impresiones">
+            <option value="0">0</option>
+            <option value="1260">1260</option>
+        </select>
+    </label>
+    <label>Cantidad de fotos a imprimir:
+        <input type="number" id="cantidadImprimir" value="0">
+    </label>
+    <label>Costos Variables ($):
+        <input type="number" id="costosVariables" value="0">
+    </label>
+    <label>Descuento (%):
+        <input type="number" id="descuento" value="0">
+    </label>
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="resultado" id="resultados"></div>
+
+    <script>
+        function actualizarHorasEdicion() {
+            const hs = parseFloat(document.getElementById("horasServicio").value);
+            document.getElementById("horasEdicion").value = (hs * 2).toFixed(2);
+        }
+
+        function calcular() {
+            const hs = parseFloat(document.getElementById("horasServicio").value);
+            const he = parseFloat(document.getElementById("horasEdicion").value);
+            const cf = parseFloat(document.getElementById("cantidadFotos").value);
+            const vu = parseFloat(document.getElementById("valorUber").value);
+            const imp = parseInt(document.getElementById("impresiones").value);
+            const ci = parseFloat(document.getElementById("cantidadImprimir").value);
+            const cv = parseFloat(document.getElementById("costosVariables").value);
+            const desc = parseFloat(document.getElementById("descuento").value);
+
+            const totalHora = hs * 30000;
+            const totalFotos = cf * 72;
+            const totalImpresiones = imp === 1260 ? 1260 + (ci * 300) : 0;
+
+            const totalSinImpuestos = totalHora + totalFotos + vu + totalImpresiones + cv;
+            const impuestos = totalSinImpuestos * 0.14;
+            const totalBoleta = totalSinImpuestos + impuestos;
+            const descuentoAplicado = totalBoleta * (desc / 100);
+            const totalFinal = totalBoleta - descuentoAplicado;
+
+            document.getElementById("resultados").innerHTML = `
+                <p>Total hora de proyecto: <span>$${totalHora.toLocaleString()}</span></p>
+                <p>Total fotos: <span>$${totalFotos.toLocaleString()}</span></p>
+                <p>Total impresiones: <span>$${totalImpresiones.toLocaleString()}</span></p>
+                <p>Total sin impuestos: <span>$${totalSinImpuestos.toLocaleString()}</span></p>
+                <p>Impuestos (14%): <span>$${impuestos.toLocaleString()}</span></p>
+                <p>Total boleta: <span>$${totalBoleta.toLocaleString()}</span></p>
+                <p>Descuento aplicado: <span>$${descuentoAplicado.toLocaleString()}</span></p>
+                <p><strong>Total final: <span>$${totalFinal.toLocaleString()}</span></strong></p>
+            `;
+        }
+
+        window.onload = actualizarHorasEdicion;
+    </script>
+</body>
+</html>
